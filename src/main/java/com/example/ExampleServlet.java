@@ -15,13 +15,15 @@ public class ExampleServlet extends HttpServlet {
             resp.setStatus(HttpStatus.OK_200);
             resp.getWriter().println("Tibi's server");
             String query = req.getQueryString();
-
             String[] pairs = query.split("&");
-            //further split the query
+
+            //initialize local variables
             boolean foundFrom = false;
             boolean foundTo = false;
             int lowerLimit = 0;
             int upperLimit = 0;
+
+            //further split the key and value pairs
             for(int i = 0; i < pairs.length; i++){
                 String[] keys = pairs[i].split("=");
                 if(keys[0].equals("from")){
@@ -43,9 +45,9 @@ public class ExampleServlet extends HttpServlet {
                     }
                 }
             }
-            //count up the values
 
-            if(foundFrom && foundTo && lowerLimit < upperLimit){
+        //count up the values
+        if(foundFrom && foundTo && lowerLimit < upperLimit){
                 for(int i = lowerLimit; i <= upperLimit; i++){
                     resp.getWriter().println(i);
                 }
