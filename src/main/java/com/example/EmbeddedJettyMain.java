@@ -12,7 +12,7 @@ public class EmbeddedJettyMain {
     public static void main(String[] args) {
 
         //Dynamic
-        Server server = new Server(7070);
+        Server server = new Server(8080);
         ServletContextHandler servletContextHandler = new ServletContextHandler(server,"/dynamic");
         servletContextHandler.addServlet(ExampleServlet.class,"/");
 
