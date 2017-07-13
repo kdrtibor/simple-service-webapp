@@ -24,8 +24,8 @@ public class ExampleServlet extends HttpServlet {
             int upperLimit = 0;
 
             //further split the key and value pairs
-            for(int i = 0; i < pairs.length; i++){
-                String[] keys = pairs[i].split("=");
+            for(String pair : pairs){
+                String[] keys = pair.split("=");
                 if(keys[0].equals("from") && !foundFrom){
                     try{
                         lowerLimit = Integer.parseInt(keys[1]);
