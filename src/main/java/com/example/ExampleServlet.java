@@ -26,7 +26,7 @@ public class ExampleServlet extends HttpServlet {
             //further split the key and value pairs
             for(int i = 0; i < pairs.length; i++){
                 String[] keys = pairs[i].split("=");
-                if(keys[0].equals("from")){
+                if(keys[0].equals("from") && !foundFrom){
                     try{
                         lowerLimit = Integer.parseInt(keys[1]);
                         foundFrom = true;
@@ -35,7 +35,7 @@ public class ExampleServlet extends HttpServlet {
                         e.printStackTrace();
                     }
                 }
-                if(keys[0].equals("to")){
+                if(keys[0].equals("to") && !foundTo){
                     try{
                         upperLimit = Integer.parseInt(keys[1]);
                         foundTo = true;
