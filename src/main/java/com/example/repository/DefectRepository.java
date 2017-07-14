@@ -1,10 +1,8 @@
 package com.example.repository;
 
 import com.example.model.Defect;
-import com.example.model.UserStory;
-
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -28,7 +26,9 @@ public class DefectRepository {
         return defectList.remove(o);
     }
 
-
+    public static List<Defect> getAll(Defect defect) {
+        return Collections.unmodifiableList(defectList);
+    }
 
     public static void clear() {
         defectList.clear();
