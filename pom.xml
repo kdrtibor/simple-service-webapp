@@ -54,6 +54,7 @@
             <artifactId>jersey-media-moxy</artifactId>
             <version>2.7</version>
         </dependency>
+
         <!--Jetty  dependencies start here-->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -67,4 +68,19 @@
         </dependency>
         <!--Jetty  dependencies end here-->
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
