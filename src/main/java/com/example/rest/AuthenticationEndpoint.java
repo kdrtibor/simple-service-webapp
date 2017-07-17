@@ -1,4 +1,6 @@
-package com.example.authentication;
+package com.example.rest;
+
+import com.example.authentication.Credentials;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

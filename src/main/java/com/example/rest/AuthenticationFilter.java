@@ -1,5 +1,7 @@
 
-package com.example.authentication;
+package com.example.rest;
+
+import com.example.authentication.Secured;
 
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
