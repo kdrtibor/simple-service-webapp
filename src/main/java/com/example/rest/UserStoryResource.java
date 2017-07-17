@@ -1,5 +1,6 @@
 package com.example.rest;
 
+import com.example.authentication.Secured;
 import com.example.model.UserStory;
 import com.example.repository.UserStoryRepository;
 
@@ -29,6 +30,7 @@ public class UserStoryResource {
     }
 
     @POST
+    @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String postUserStory(UserStory story){
@@ -37,6 +39,7 @@ public class UserStoryResource {
     }
 
     @PUT
+    @Secured
     @Path("/{userStoryId}")
     @Produces(MediaType.APPLICATION_JSON)
     public String updateUserStory(@PathParam("userStoryId") int userStoryId,UserStory newStory) {
