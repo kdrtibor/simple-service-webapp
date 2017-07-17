@@ -12,6 +12,14 @@ public class UserStoryRepository {
 
     private static List<UserStory> userStoryList = new ArrayList<>();
 
+    public static UserStory get(int index) {
+        return userStoryList.get(index);
+    }
+
+    public static int length() {
+        return userStoryList.size();
+    }
+
     public static List<UserStory> getAll() {
         return Collections.unmodifiableList(userStoryList);
     }
@@ -26,6 +34,10 @@ public class UserStoryRepository {
 
     public static boolean remove(Object o) {
         return userStoryList.remove(o);
+    }
+
+    public static void remove(int index){
+        userStoryList.remove(index);
     }
 
     public static boolean contains(Object o) {
