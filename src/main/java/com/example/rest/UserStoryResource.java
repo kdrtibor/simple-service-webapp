@@ -26,31 +26,31 @@ public class UserStoryResource {
                 return us;
             }
         }
-        return null;
+        throw new NotFoundException();
     }
 
     @POST
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String postUserStory(UserStory story){
+    public UserStory postUserStory(UserStory story){
         UserStoryRepository.add(story);
-        return "successfully posted";
+        return story;
     }
 
     @PUT
     @Secured
     @Path("/{userStoryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateUserStory(@PathParam("userStoryId") int userStoryId,UserStory newStory) {
+    public UserStory updateUserStory(@PathParam("userStoryId") int userStoryId, UserStory newStory) {
         for (UserStory us : UserStoryRepository.getAll()) {
             if (us.getId() == userStoryId) {
                 UserStoryRepository.remove(us);
                 UserStoryRepository.add(newStory);
-                return "Updated successfully";
+                return newStory;
             }
         }
-        return "Object to update not found";
+        throw new NotFoundException();
     }
 
 
@@ -64,6 +64,6 @@ public class UserStoryResource {
                 return "Deleted successfully";
             }
         }
-        return "Object to delete not found";
+        throw new NotFoundException();
     }
 }
