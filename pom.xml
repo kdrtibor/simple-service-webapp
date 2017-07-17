@@ -11,6 +11,7 @@
 
     <modules>
         <module>simple-service-webapp-rest</module>
+        <module>simple-service-webapp-tests</module>
     </modules>
 
     <build>
