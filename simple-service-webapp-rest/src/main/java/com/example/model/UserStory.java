@@ -40,4 +40,12 @@ public class UserStory {
         this.storyPoints = storyPoints;
     }
 
+    @Override
+    public String toString() {
+        return "UserStory{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", storyPoints=" + storyPoints +
+                '}';
+    }
 }

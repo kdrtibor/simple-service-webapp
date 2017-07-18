@@ -3,6 +3,7 @@ package com.example.rest;
 
 import com.example.authentication.Secured;
 
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -26,7 +27,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         // Check if the HTTP Authorization header is present and formatted correctly 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new IOException("Authorization header must be provided");
+            throw new ForbiddenException("Authorization header must be provided");
         }
 
         // Extract the token from the HTTP Authorization header
