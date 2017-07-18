@@ -10,6 +10,9 @@ public class Credentials {
         this.password = password;
     }
 
+    public Credentials() {
+    }
+
     public String getUsername() {
         return username;
     }
@@ -17,7 +20,6 @@ public class Credentials {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     public String getPassword() {
         return password;
