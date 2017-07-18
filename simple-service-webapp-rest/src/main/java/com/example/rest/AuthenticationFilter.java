@@ -2,6 +2,8 @@
 package com.example.rest;
 
 import com.example.authentication.Secured;
+import com.example.authentication.Token;
+import com.example.repository.TokenRepository;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.Priorities;
@@ -47,7 +49,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private void validateToken(String token) throws Exception {
         // Check if it was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-        if(!token.equals("token12"))
+        if(!TokenRepository.containsToken(token))
             throw new Exception("Token does not match");
     }
 }
