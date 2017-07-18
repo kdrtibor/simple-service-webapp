@@ -38,8 +38,10 @@ public class AuthenticationEndpoint {
         if(username.equals("abcde"))
             if(password.equals("12345"))
                 return;
-        else
-            throw new Exception();
+        else {
+                System.out.println("ham");
+                throw new Exception();
+        }
     }
 
     private String issueToken(String username) {

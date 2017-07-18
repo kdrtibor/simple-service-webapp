@@ -6,12 +6,16 @@ import com.example.repository.UserStoryRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 @Path("/userstories")
 public class UserStoryResource {
 
+
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserStory> getAll() {
         return UserStoryRepository.getAll();
@@ -34,6 +38,7 @@ public class UserStoryResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UserStory postUserStory(UserStory story){
+
         UserStoryRepository.add(story);
         return story;
     }

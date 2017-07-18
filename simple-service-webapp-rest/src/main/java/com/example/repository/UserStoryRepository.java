@@ -10,6 +10,8 @@ import java.util.List;
 
 public class UserStoryRepository {
 
+    private static int internalCounter;
+
     private static List<UserStory> userStoryList = new ArrayList<>();
 
     public static UserStory get(int index) {
@@ -29,6 +31,7 @@ public class UserStoryRepository {
     }
 
     public static boolean add(UserStory userStory) {
+        userStory.setId(internalCounter++);
         return userStoryList.add(userStory);
     }
 
