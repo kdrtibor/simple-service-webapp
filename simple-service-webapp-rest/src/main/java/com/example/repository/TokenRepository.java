@@ -4,6 +4,7 @@ package com.example.repository;
 import com.example.rest.authentication.Token;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +23,17 @@ public class TokenRepository {
     }
 
     public static Token containsValidToken(String username){
+        System.out.println("check if there is a token");
         LocalDateTime currentDate = LocalDateTime.now();
         for(Token token: tokens){
-            if(token.getKey().contains(username))
+            if(token.getUserName().equals(username))
                 //issued less then a minute ago -> reuse it
-                if(currentDate.toInstant(null).toEpochMilli() - token.getCreationTime().toInstant(null).toEpochMilli() < MINUTE){
+                if(ChronoUnit.MINUTES.between(currentDate,token.getCreationTime()) == 0){
+                    System.out.println("there is a token");
                     return token;
                 }
         }
+        System.out.println("there is no token");
         return null;
     }
 

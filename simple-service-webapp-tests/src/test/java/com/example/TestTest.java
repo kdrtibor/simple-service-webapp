@@ -11,19 +11,18 @@ import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import org.junit.Test;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 public class TestTest {
 
     private static ObjectMapper mapper = new ObjectMapper();
+    private ConnectionUtils connectionUtils = new ConnectionUtils();
+
     static {
         SimpleModule module = new SimpleModule();
         module.addSerializer(LocalDateTime.class, new CustomJsonProvider.CustomLocalDateTimeSerializer());
@@ -32,18 +31,18 @@ public class TestTest {
     }
 
     @Test
-    public void testPostMethod() throws IOException,ParseException {
+    public void testPostMethod() throws IOException, ParseException {
 
 
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
-        GenericUrl url = new GenericUrl("http://localhost:8080/api/userstories");
+        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories");
 
 
         UserStory userStory = new UserStory(10, "newus", 10);
         System.out.println(mapper.writeValueAsString(userStory));
-        String token = "Bearer " + authenticate();
+        String token = "Bearer " + authenticate().getKey();
         HttpRequest request =
                 requestFactory.buildPostRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(userStory).getBytes()))
                         .setHeaders(new HttpHeaders().set("Authorization", Collections.singletonList(token)));
@@ -54,14 +53,14 @@ public class TestTest {
     }
 
     @Test
-    public void testGetMethod() throws IOException,ParseException {
+    public void testGetMethod() throws IOException, ParseException {
 
 
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
-        GenericUrl url = new GenericUrl("http://localhost:8080/api/userstories");
-        String token = "Bearer " + authenticate();
+        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories");
+        String token = "Bearer " + authenticate().getKey();
         HttpRequest request =
                 requestFactory
                         .buildGetRequest(url)
@@ -69,7 +68,8 @@ public class TestTest {
                                 .set("Authorization", Collections.singletonList(token))
                         );
 
-        Collection<UserStory> userStories = mapper.readValue(request.execute().parseAsString(), new TypeReference<List<UserStory>>(){});
+        Collection<UserStory> userStories = mapper.readValue(request.execute().parseAsString(), new TypeReference<List<UserStory>>() {
+        });
 
         for (UserStory us : userStories) {
             System.out.println(us.toString());
@@ -78,12 +78,12 @@ public class TestTest {
     }
 
     @Test
-    public void testDeleteMethod() throws IOException,ParseException {
+    public void testDeleteMethod() throws IOException, ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
-        GenericUrl url = new GenericUrl("http://localhost:8080/api/userstories/0");
-        String token = "Bearer " + authenticate();
+        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories");
+        String token = "Bearer " + authenticate().getKey();
         HttpRequest request =
                 requestFactory
                         .buildDeleteRequest(url)
@@ -94,12 +94,12 @@ public class TestTest {
     }
 
     @Test
-    public void testPutMethod() throws IOException,ParseException {
+    public void testPutMethod() throws IOException, ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
-        GenericUrl url = new GenericUrl("http://localhost:8080/api/userstories/10");
-        String token = "Bearer " + authenticate();
+        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories/10");
+        String token = "Bearer " + authenticate().getKey();
 
         UserStory userStory = new UserStory(10, "newus 22", 1011);
         HttpRequest request =
@@ -112,58 +112,33 @@ public class TestTest {
     }
 
     @Test
-    public void getLoginToken() throws IOException,ParseException {
-        String token = authenticate();
+    public void getLoginToken() throws IOException, ParseException {
+        Token token = authenticate();
 
         System.out.println(token);
     }
 
 
-    public String authenticate() throws IOException, ParseException {
+    public Token authenticate() throws IOException, ParseException {
+
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
-        //should read from file
 
-        Properties prop = new Properties();
-        InputStream input = null;
+        Credentials credentials = connectionUtils.getCredentials();
+        String urlFromFile = connectionUtils.getUrl() + "/authentication";
+        GenericUrl url = new GenericUrl(urlFromFile);
 
-        try {
+        HttpRequest request =
+                requestFactory
+                        .buildPostRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(credentials).getBytes()));
 
-            input = new FileInputStream("C:\\simple-service-webapp\\simple-service-webapp-tests\\src\\test\\resources\\credentials.properties");
-            prop.load(input);
-            //set the url
-            GenericUrl url = new GenericUrl(prop.getProperty("url"));
-            //set the credentials
-            Credentials credentials = new Credentials(prop.getProperty("username"),prop.getProperty("password"));
+        String token = request.execute().parseAsString();
 
-            HttpRequest request =
-                    requestFactory
-                            .buildPostRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(credentials).getBytes()));
+        //try to make token from json
+        Token token1 = mapper.readValue(token, Token.class);
+        System.out.println(token1);
+        return token1;
 
-
-
-            String token = request.execute().parseAsString();
-
-            //try to make token from json
-            Token token1 = mapper.readValue(token, Token.class);
-            System.out.println(token1);
-            return token;
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-        return "failed to get properties";
     }
 
 }

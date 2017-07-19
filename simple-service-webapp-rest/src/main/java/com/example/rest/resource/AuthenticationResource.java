@@ -56,8 +56,10 @@ public class AuthenticationResource {
 
         if(token!=null){
             //try if there are valid tokens
+            System.out.println("found a good token");
             return token;
         }
+        System.out.println("havent found a good token");
         //else branch issue new token
         token  = new Token();
         LocalDateTime date =  LocalDateTime.now();
