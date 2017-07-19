@@ -1,14 +1,12 @@
-package com.example.rest;
+package com.example.rest.resource;
 
-import com.example.authentication.Secured;
+import com.example.rest.authentication.Secured;
 import com.example.model.UserStory;
 import com.example.repository.UserStoryRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 @Path("/userstories")
 public class UserStoryResource {

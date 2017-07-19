@@ -1,7 +1,6 @@
-package com.example.authentication;
+package com.example.rest.authentication;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Token {
 
@@ -12,8 +11,8 @@ public class Token {
     public Token() {
     }
 
-    public Token(String token, String userName, LocalDateTime creationTime) {
-        this.key = token;
+    public Token(String key, String userName, LocalDateTime creationTime) {
+        this.key = key;
         this.userName = userName;
         this.creationTime = creationTime;
     }
@@ -37,6 +36,13 @@ public class Token {
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
+
+//    public void setCreationTime(String creationTime) {
+//        int year, month, day, hour, minute, second;
+//        String[] date = creationTime.split(" ");
+//        this.creationTime = LocalDateTime.now();
+//    }
+
 
     public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;

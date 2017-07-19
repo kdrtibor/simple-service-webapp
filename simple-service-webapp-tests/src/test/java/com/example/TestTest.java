@@ -1,28 +1,35 @@
 package com.example;
 
-import com.example.authentication.Credentials;
-import com.example.authentication.Token;
 import com.example.model.UserStory;
+import com.example.rest.authentication.Credentials;
+import com.example.rest.authentication.Token;
+import com.example.rest.config.CustomJsonProvider;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.json.JSONObject;
 import org.junit.Test;
 
-import javax.json.JsonObject;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 public class TestTest {
 
-
-    private ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper();
+    static {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(LocalDateTime.class, new CustomJsonProvider.CustomLocalDateTimeSerializer());
+        module.addDeserializer(LocalDateTime.class, new CustomJsonProvider.CustomLocalDateTimeDeserializer());
+        mapper.registerModule(module);
+    }
 
     @Test
     public void testPostMethod() throws IOException,ParseException {
@@ -62,8 +69,7 @@ public class TestTest {
                                 .set("Authorization", Collections.singletonList(token))
                         );
 
-        Collection<UserStory> userStories = mapper.readValue(request.execute().parseAsString(), new TypeReference<List<UserStory>>() {
-        });
+        Collection<UserStory> userStories = mapper.readValue(request.execute().parseAsString(), new TypeReference<List<UserStory>>(){});
 
         for (UserStory us : userStories) {
             System.out.println(us.toString());
@@ -136,7 +142,12 @@ public class TestTest {
 
 
 
-            return request.execute().parseAsString();
+            String token = request.execute().parseAsString();
+
+            //try to make token from json
+            Token token1 = mapper.readValue(token, Token.class);
+            System.out.println(token1);
+            return token;
         }
         catch(IOException e){
             e.printStackTrace();

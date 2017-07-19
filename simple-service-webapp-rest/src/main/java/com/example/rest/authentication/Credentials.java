@@ -1,4 +1,4 @@
-package com.example.authentication;
+package com.example.rest.authentication;
 
 public class Credentials {
 

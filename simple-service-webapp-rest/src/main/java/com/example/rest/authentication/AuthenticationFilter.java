@@ -1,10 +1,9 @@
 
-package com.example.rest;
+package com.example.rest.authentication;
 
-import com.example.authentication.Secured;
-import com.example.authentication.Token;
 import com.example.repository.TokenRepository;
 
+import javax.annotation.Priority;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
@@ -15,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import javax.annotation.*;
 
 @Secured
 @Provider

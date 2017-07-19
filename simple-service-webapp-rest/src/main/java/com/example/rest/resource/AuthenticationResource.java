@@ -1,19 +1,17 @@
-package com.example.rest;
+package com.example.rest.resource;
 
-import com.example.authentication.Credentials;
-import com.example.authentication.Token;
+import com.example.rest.authentication.Credentials;
+import com.example.rest.authentication.Token;
 import com.example.repository.TokenRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Path("/authentication")
-public class AuthenticationEndpoint {
+public class AuthenticationResource {
 
     private TokenRepository tokenRepository = new TokenRepository();
 
@@ -34,7 +32,7 @@ public class AuthenticationEndpoint {
             Token token = issueToken(username);
 
             // Return the token on the response
-            return Response.ok(token.getKey()).build();
+            return Response.ok(token).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -64,6 +62,7 @@ public class AuthenticationEndpoint {
         token  = new Token();
         LocalDateTime date =  LocalDateTime.now();
         token.setKey(UUID.randomUUID()+"");
+        //here i modified and put "" instead of date
         token.setCreationTime(date);
         token.setUserName(username);
 

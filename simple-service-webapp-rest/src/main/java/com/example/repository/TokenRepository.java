@@ -1,13 +1,11 @@
 package com.example.repository;
 
 
-import com.example.authentication.Token;
+import com.example.rest.authentication.Token;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class TokenRepository {
