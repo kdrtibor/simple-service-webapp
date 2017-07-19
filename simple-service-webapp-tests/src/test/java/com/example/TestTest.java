@@ -5,18 +5,19 @@ import com.example.authentication.Token;
 import com.example.model.UserStory;
 import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import org.codehaus.jackson.JsonNode;
+import com.google.api.client.json.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import javax.json.JsonObject;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TestTest {
 
@@ -24,7 +25,7 @@ public class TestTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testPostMethod() throws IOException {
+    public void testPostMethod() throws IOException,ParseException {
 
 
         HttpTransport transport = new NetHttpTransport();
@@ -46,7 +47,7 @@ public class TestTest {
     }
 
     @Test
-    public void testGetMethod() throws IOException {
+    public void testGetMethod() throws IOException,ParseException {
 
 
         HttpTransport transport = new NetHttpTransport();
@@ -71,7 +72,7 @@ public class TestTest {
     }
 
     @Test
-    public void testDeleteMethod() throws IOException {
+    public void testDeleteMethod() throws IOException,ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
@@ -87,7 +88,7 @@ public class TestTest {
     }
 
     @Test
-    public void testPutMethod() throws IOException {
+    public void testPutMethod() throws IOException,ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
@@ -105,31 +106,53 @@ public class TestTest {
     }
 
     @Test
-    public void getLoginToken() throws IOException {
+    public void getLoginToken() throws IOException,ParseException {
         String token = authenticate();
 
         System.out.println(token);
     }
 
 
-    public String authenticate() throws IOException {
+    public String authenticate() throws IOException, ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
+        //should read from file
 
-        GenericUrl url = new GenericUrl("http://localhost:8080/api/authentication");
+        Properties prop = new Properties();
+        InputStream input = null;
 
-        Credentials credentials = new Credentials("abcde", "12345");
+        try {
 
-        HttpRequest request =
-                requestFactory
-                        .buildPostRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(credentials).getBytes()));
+            input = new FileInputStream("C:\\simple-service-webapp\\simple-service-webapp-tests\\src\\test\\resources\\credentials.properties");
+            prop.load(input);
+            //set the url
+            GenericUrl url = new GenericUrl(prop.getProperty("url"));
+            //set the credentials
+            Credentials credentials = new Credentials(prop.getProperty("username"),prop.getProperty("password"));
+
+            HttpRequest request =
+                    requestFactory
+                            .buildPostRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(credentials).getBytes()));
 
 
 
+            return request.execute().parseAsString();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
 
-
-        return request.execute().parseAsString();
-
+        return "failed to get properties";
     }
+
 }

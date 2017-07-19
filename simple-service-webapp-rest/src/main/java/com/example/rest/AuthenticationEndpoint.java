@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class AuthenticationEndpoint {
             Token token = issueToken(username);
 
             // Return the token on the response
-            return Response.ok(token.getToken()).build();
+            return Response.ok(token.getKey()).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -61,9 +62,10 @@ public class AuthenticationEndpoint {
         }
         //else branch issue new token
         token  = new Token();
-        Date date = new Date();
-        token.setToken(UUID.randomUUID() + username + date);
+        LocalDateTime date =  LocalDateTime.now();
+        token.setKey(UUID.randomUUID()+"");
         token.setCreationTime(date);
+        token.setUserName(username);
 
         tokenRepository.addToken(token);
 

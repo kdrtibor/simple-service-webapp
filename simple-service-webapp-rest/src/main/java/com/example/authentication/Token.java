@@ -1,44 +1,51 @@
 package com.example.authentication;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import java.time.LocalDateTime;
 import java.util.Date;
 
-
-@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm a z")
 public class Token {
 
-    private String token;
-    private Date creationTime;
+    private String key;
+    private String userName;
+    private LocalDateTime creationTime;
 
     public Token() {
     }
 
-    public Token(String token, Date creationTime) {
-        this.token = token;
+    public Token(String token, String userName, LocalDateTime creationTime) {
+        this.key = token;
+        this.userName = userName;
         this.creationTime = creationTime;
     }
 
-    public String getToken() {
-        return token;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
-    public Date getCreationTime() {
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public LocalDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(Date creationTime) {
+    public void setCreationTime(LocalDateTime creationTime) {
         this.creationTime = creationTime;
     }
 
     @Override
     public String toString() {
         return "Token{" +
-                "token='" + token + '\'' +
+                "token='" + key + '\'' +
                 ", creationTime=" + creationTime +
                 '}';
     }

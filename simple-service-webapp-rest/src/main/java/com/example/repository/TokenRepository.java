@@ -12,6 +12,7 @@ import java.util.List;
 
 public class TokenRepository {
 
+    private static final int MINUTE = 60000;
     private static List<Token> tokens = new ArrayList();
 
     public static void addToken(Token newToken){
@@ -23,11 +24,11 @@ public class TokenRepository {
     }
 
     public static Token containsValidToken(String username){
-        Date currentDate = new Date();
+        LocalDateTime currentDate = LocalDateTime.now();
         for(Token token: tokens){
-            if(token.getToken().contains(username))
+            if(token.getKey().contains(username))
                 //issued less then a minute ago -> reuse it
-                if(currentDate.getTime() - token.getCreationTime().getTime() < 60000){
+                if(currentDate.toInstant(null).toEpochMilli() - token.getCreationTime().toInstant(null).toEpochMilli() < MINUTE){
                     return token;
                 }
         }
@@ -36,10 +37,19 @@ public class TokenRepository {
 
     public static boolean containsToken(String token){
         for(Token tkn:tokens){
-            if(tkn.getToken().equals(token)){
+            if(tkn.getKey().equals(token)){
                 return true;
             }
         }
         return false;
+    }
+
+    public static LocalDateTime getTokenCreationTime(String key){
+        for(Token token: tokens){
+            if(token.getKey().equals(key)){
+                return token.getCreationTime();
+            }
+        }
+        return null;
     }
 }
