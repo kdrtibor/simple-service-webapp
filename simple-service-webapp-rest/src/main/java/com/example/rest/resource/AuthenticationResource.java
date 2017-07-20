@@ -40,7 +40,6 @@ public class AuthenticationResource {
     }
 
     private void authenticate(String username, String password) throws Exception {
-        //hardcoded an email
         if(username.equals("abcde"))
             if(password.equals("12345"))
                 return;
@@ -55,19 +54,13 @@ public class AuthenticationResource {
         Token token = tokenRepository.containsValidToken(username);
 
         if(token!=null){
-            //try if there are valid tokens
-            System.out.println("found a good token");
             return token;
         }
-        System.out.println("havent found a good token");
-        //else branch issue new token
         token  = new Token();
         LocalDateTime date =  LocalDateTime.now();
         token.setKey(UUID.randomUUID()+"");
-        //here i modified and put "" instead of date
         token.setCreationTime(date);
         token.setUserName(username);
-
         tokenRepository.addToken(token);
 
         return token;

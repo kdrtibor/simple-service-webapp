@@ -48,4 +48,15 @@ public class UserStory {
                 ", storyPoints=" + storyPoints +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o instanceof UserStory) {
+            UserStory us = (UserStory) o;
+            if (getId() == us.getId() && (getName().equals(us.getName())) && (getStoryPoints() == us.getStoryPoints()))
+                return true;
+        }
+        return false;
+    }
 }

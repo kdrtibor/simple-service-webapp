@@ -13,7 +13,7 @@ public class ConnectionUtils {
     private String path;
 
     public ConnectionUtils() {
-        this.path = "C:\\simple-service-webapp\\simple-service-webapp-tests\\src\\test\\resources\\connection.properties";;
+        this.path = "src/test/resources/connection.properties";
     }
 
     public Credentials getCredentials(){

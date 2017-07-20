@@ -46,14 +46,7 @@ public class UserStoryResource {
     @Path("/{userStoryId}")
     @Produces(MediaType.APPLICATION_JSON)
     public UserStory updateUserStory(@PathParam("userStoryId") int userStoryId, UserStory newStory) {
-        for (UserStory us : UserStoryRepository.getAll()) {
-            if (us.getId() == userStoryId) {
-                UserStoryRepository.remove(us);
-                UserStoryRepository.add(newStory);
-                return newStory;
-            }
-        }
-        throw new NotFoundException();
+        return UserStoryRepository.replace(userStoryId,newStory);
     }
 
 

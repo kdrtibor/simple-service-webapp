@@ -23,17 +23,13 @@ public class TokenRepository {
     }
 
     public static Token containsValidToken(String username){
-        System.out.println("check if there is a token");
         LocalDateTime currentDate = LocalDateTime.now();
         for(Token token: tokens){
             if(token.getUserName().equals(username))
-                //issued less then a minute ago -> reuse it
                 if(ChronoUnit.MINUTES.between(currentDate,token.getCreationTime()) == 0){
-                    System.out.println("there is a token");
                     return token;
                 }
         }
-        System.out.println("there is no token");
         return null;
     }
 

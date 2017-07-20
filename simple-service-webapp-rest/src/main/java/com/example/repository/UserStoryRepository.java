@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.model.UserStory;
 
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,25 +30,54 @@ public class UserStoryRepository {
         return userStoryList.isEmpty();
     }
 
-    public static boolean add(UserStory userStory) {
+    public static void add(UserStory userStory) {
         userStory.setId(internalCounter++);
-        return userStoryList.add(userStory);
+        userStoryList.add(userStory);
+    }
+
+    public static UserStory replace(int userStoryId, UserStory newStory) {
+        for (UserStory us : UserStoryRepository.getAll()) {
+            if (us.getId() == userStoryId) {
+                userStoryList.remove(us);
+                newStory.setId(userStoryId);
+                userStoryList.add(newStory);
+                return newStory;
+            }
+        }
+        throw new NotFoundException();
+    }
+
+    public static boolean containsId(int id){
+        for (UserStory us : userStoryList) {
+            if (us.getId() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean remove(Object o) {
         return userStoryList.remove(o);
     }
 
-    public static void remove(int index){
+    public static void remove(int index) {
         userStoryList.remove(index);
     }
 
-    public static boolean contains(Object o) {
-        return userStoryList.contains(o);
+    public static boolean contains(UserStory userStory) {
+        System.out.println(userStoryList.size());
+        for(UserStory us : UserStoryRepository.getAll()){
+
+            if(us.equals(userStory))
+                return true;
+        }
+        System.out.println("se");
+        return false;
     }
 
     public static void clear() {
         userStoryList.clear();
     }
+
 
 }
