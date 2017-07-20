@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -24,6 +26,8 @@ public class UserStoriesRestTest {
     private static ObjectMapper mapper = new ObjectMapper();
     private static ConnectionUtils connectionUtils = new ConnectionUtils();
     private static Token token;
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
 
     static {
         SimpleModule module = new SimpleModule();
@@ -138,7 +142,7 @@ public class UserStoriesRestTest {
         assert userStory1.equals(userStory2);
     }
 
-    @Test
+    @Test(expected = HttpResponseException.class)
     public void testDeleteMethod() throws IOException, ParseException {
 
         HttpTransport transport = new NetHttpTransport();
@@ -162,7 +166,7 @@ public class UserStoriesRestTest {
                         .setHeaders(new HttpHeaders()
                                 .set("Authorization", Collections.singletonList(stringToken))
                         );
-
+        request1.execute();
     }
 
 
