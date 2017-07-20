@@ -16,8 +16,8 @@ public class App {
         config.packages("com.example.rest");
         config.register(MarshallingFeature.class);
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
-
-        Server jettyServer = new Server(8085);
+        String port = System.getProperties().getProperty("port");
+        Server jettyServer = new Server(Integer.parseInt(port));
         ServletContextHandler context = new ServletContextHandler(jettyServer, "/api/*");
         context.addServlet(servlet, "/*");
 

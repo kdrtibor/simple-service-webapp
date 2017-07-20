@@ -90,7 +90,7 @@ public class UserStoriesRestTest {
         assert userStory1.equals(userStory2);
     }
 
-    @Test
+   @Test
     public void testGetMethod() throws IOException, ParseException {
 
 
@@ -120,27 +120,44 @@ public class UserStoriesRestTest {
     public void testPutMethod() throws IOException, ParseException {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
+        //introduce a new userStory
+        GenericUrl postUrl = new GenericUrl(connectionUtils.getUrl() + "userstories");
 
-        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories/0");
+
+        UserStory userStory = new UserStory(10, "newus", 10);
+
         String stringToken = "Bearer " + token.getKey();
-        System.out.println(token.getKey());
-        UserStory userStory = new UserStory(10, "newus 22", 1011);
+
+        HttpRequest postRequest =
+                requestFactory.buildPostRequest(postUrl, new ByteArrayContent("application/json", mapper.writeValueAsString(userStory).getBytes()))
+                        .setHeaders(new HttpHeaders().set("Authorization", Collections.singletonList(stringToken)));
+
+        String response = postRequest.execute().parseAsString();
+        System.out.println(response);
+        UserStory userStory1 = mapper.readValue(response, UserStory.class);
+
+
+        //update the introduced user story
+        GenericUrl putUrl = new GenericUrl(connectionUtils.getUrl() + "userstories/"+ userStory1.getId());
+
+
+        UserStory userStory2 = new UserStory(10, "newus 22", 1011);
         HttpRequest request =
                 requestFactory
-                        .buildPutRequest(url, new ByteArrayContent("application/json", mapper.writeValueAsString(userStory).getBytes()))
+                        .buildPutRequest(putUrl, new ByteArrayContent("application/json", mapper.writeValueAsString(userStory).getBytes()))
                         .setHeaders(new HttpHeaders()
                                 .set("Authorization", Collections.singletonList(stringToken))
                         );
-        String response = request.execute().parseAsString();
-        UserStory userStory1 = mapper.readValue(response, UserStory.class);
+        String putResponse = request.execute().parseAsString();
+        UserStory userStory3 = mapper.readValue(response, UserStory.class);
         System.out.println(response);
 
-        GenericUrl url1 = new GenericUrl(connectionUtils.getUrl() + "userstories" + "/0");
+        GenericUrl url1 = new GenericUrl(connectionUtils.getUrl() + "userstories/" + userStory3.getId());
         HttpRequest request1 =
                 requestFactory.buildGetRequest(url1)
                         .setHeaders(new HttpHeaders().set("Authorization", Collections.singletonList(stringToken)));
-        UserStory userStory2 = mapper.readValue(request1.execute().parseAsString(), UserStory.class);
-        assert userStory1.equals(userStory2);
+        UserStory userStory4 = mapper.readValue(request1.execute().parseAsString(), UserStory.class);
+        assert userStory1.equals(userStory4);
     }
 
     @Test
@@ -149,21 +166,38 @@ public class UserStoriesRestTest {
         HttpTransport transport = new NetHttpTransport();
         HttpRequestFactory requestFactory = transport.createRequestFactory();
 
-        GenericUrl url = new GenericUrl(connectionUtils.getUrl() + "userstories/0");
+        //introduce a new userStory
+        GenericUrl postUrl = new GenericUrl(connectionUtils.getUrl() + "userstories");
+
+
+        UserStory userStory = new UserStory(10, "newus", 10);
+
         String stringToken = "Bearer " + token.getKey();
-        System.out.println(token.getKey());
-        HttpRequest request =
+
+        HttpRequest postRequest =
+                requestFactory.buildPostRequest(postUrl, new ByteArrayContent("application/json", mapper.writeValueAsString(userStory).getBytes()))
+                        .setHeaders(new HttpHeaders().set("Authorization", Collections.singletonList(stringToken)));
+
+        String response = postRequest.execute().parseAsString();
+        System.out.println(response);
+        UserStory userStory1 = mapper.readValue(response, UserStory.class);
+
+        //delete the introduced userStory
+        GenericUrl deleteUrl = new GenericUrl(connectionUtils.getUrl() + "userstories/" + userStory1.getId());
+
+
+        HttpRequest deleteRequest =
                 requestFactory
-                        .buildDeleteRequest(url)
+                        .buildDeleteRequest(deleteUrl)
                         .setHeaders(new HttpHeaders()
                                 .set("Authorization", Collections.singletonList(stringToken))
                         );
-        System.out.println(request.execute().parseAsString());
+        System.out.println(deleteRequest.execute().parseAsString());
 
-        GenericUrl url1 = new GenericUrl(connectionUtils.getUrl() + "userstories");
+        GenericUrl getUrl = new GenericUrl(connectionUtils.getUrl() + "userstories/" + userStory1.getId());
         HttpRequest request1 =
                 requestFactory
-                        .buildGetRequest(url)
+                        .buildGetRequest(getUrl)
                         .setHeaders(new HttpHeaders()
                                 .set("Authorization", Collections.singletonList(stringToken))
                         );

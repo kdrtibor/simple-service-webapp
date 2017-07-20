@@ -21,6 +21,10 @@ public class ConnectionUtils {
     }
 
     public String getUrl(){
+        String jvmParamPort = System.getProperties().getProperty("port");
+        if(jvmParamPort != null){
+            return "localhost://" + jvmParamPort + "/api/";
+        }
         return getProperties().getProperty("url");
     }
 
