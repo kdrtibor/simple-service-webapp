@@ -142,7 +142,7 @@ public class UserStoriesRestTest {
         assert userStory1.equals(userStory2);
     }
 
-    @Test(expected = HttpResponseException.class)
+
     public void testDeleteMethod() throws IOException, ParseException {
 
         HttpTransport transport = new NetHttpTransport();
@@ -166,6 +166,7 @@ public class UserStoriesRestTest {
                         .setHeaders(new HttpHeaders()
                                 .set("Authorization", Collections.singletonList(stringToken))
                         );
+        exception.expect(HttpResponseException.class);
         request1.execute();
     }
 
