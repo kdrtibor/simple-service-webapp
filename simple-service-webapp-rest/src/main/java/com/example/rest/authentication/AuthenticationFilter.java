@@ -1,8 +1,11 @@
 
-package com.example.rest;
+package com.example.rest.authentication;
 
-import com.example.authentication.Secured;
+import com.example.repository.TokenRepository;
 
+import javax.annotation.Priority;
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -10,13 +13,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import javax.annotation.*;
+import java.time.LocalDateTime;
 
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
+        private final int MINUTE = 60000;
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
@@ -26,7 +30,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         // Check if the HTTP Authorization header is present and formatted correctly 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new IOException("Authorization header must be provided");
+            throw new ForbiddenException("Authorization header must be provided");
         }
 
         // Extract the token from the HTTP Authorization header
@@ -46,7 +50,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private void validateToken(String token) throws Exception {
         // Check if it was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-        if(!token.equals("token12"))
-            throw new Exception("Token does not match");
+        LocalDateTime date = LocalDateTime.now();
+        if(!TokenRepository.containsToken(token))
+            if(date.toInstant(null).toEpochMilli() - TokenRepository.getTokenCreationTime(token).toInstant(null).toEpochMilli() > MINUTE)
+                throw new NotAuthorizedException("Token does not match");
     }
 }

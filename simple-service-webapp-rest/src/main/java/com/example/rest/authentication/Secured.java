@@ -1,4 +1,4 @@
-package com.example.authentication;
+package com.example.rest.authentication;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.Retention;
