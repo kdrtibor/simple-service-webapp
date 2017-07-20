@@ -51,12 +51,21 @@ public class UserStory {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (o instanceof UserStory) {
-            UserStory us = (UserStory) o;
-            if (getId() == us.getId() && (getName().equals(us.getName())) && (getStoryPoints() == us.getStoryPoints()))
-                return true;
-        }
-        return false;
+        UserStory userStory = (UserStory) o;
+
+        if (id != userStory.id) return false;
+        if (storyPoints != userStory.storyPoints) return false;
+        return name.equals(userStory.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + storyPoints;
+        return result;
     }
 }
